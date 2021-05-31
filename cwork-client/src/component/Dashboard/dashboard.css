@@ -1,0 +1,11 @@
+.card-master {
+  text-align: center;
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.card-master span {
+  font-size: 32px;
+}
