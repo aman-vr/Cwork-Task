@@ -5,9 +5,11 @@ namespace Cwork.Persistance
 {
     public class DataContext : DbContext
     {
+        public DataContext() {}
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<ManufacturerModel> Manufacturers { get; set; }
         public DbSet<VehicleModel> Vehicles { get; set; }
+        public DbSet<UserLoginDetail> UserLoginDetails {get; set;}
     }
 }

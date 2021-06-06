@@ -8,20 +8,20 @@ using Cwork.Domain.Models.Output;
 
 namespace Cwork.Service.Implimentation
 {
-
-
     public class CategoryRepository : ICategoryRepository
     {
         private readonly DataContext _data;
         private readonly IVehicleRepository _vehicle;
-        public CategoryRepository(DataContext data, IVehicleRepository vehicle)
+        private readonly IUserAccessor _user;
+        public CategoryRepository(DataContext data, IVehicleRepository vehicle, IUserAccessor user)
         {
+            _user = user;
             _data = data;
             _vehicle = vehicle;
         }
         public int CreateCategory(CategoryModel model)
         {
-
+             if(_user.GetUserRole() == "Admin"){
             var category = new CategoryModel
             {
                 CategoryName = model.CategoryName,
@@ -31,7 +31,8 @@ namespace Cwork.Service.Implimentation
             };
             _data.Categories.Add(category);
             return _data.SaveChanges();
-
+             }
+             return 0;
         }
 
         public List<CategoryModel> GetAllCategories()
@@ -58,6 +59,7 @@ namespace Cwork.Service.Implimentation
 
         public int DeleteCategory(int id)
         {
+             if(_user.GetUserRole() == "Admin"){
             var category = _data.Categories.Where(x => x.CategoryId == id).FirstOrDefault();
             if (category.MinWeight == 0)
             {
@@ -88,6 +90,8 @@ namespace Cwork.Service.Implimentation
             }
             _data.SaveChanges();
             return 1;
+             }
+             return 0;
 
         }
 
@@ -102,6 +106,7 @@ namespace Cwork.Service.Implimentation
         }
         public string UpdateCategory(int id, CategoryUpdateDTO category)
         {
+             if(_user.GetUserRole() == "Admin"){
             var categoryToUpdate = _data.Categories.Where(x => x.CategoryId == id).FirstOrDefault();
             var oldMinWeight = categoryToUpdate.MinWeight;
             var oldMaxWeight = categoryToUpdate.MaxWeight;
@@ -126,13 +131,13 @@ namespace Cwork.Service.Implimentation
                                 var vehiclesToUpdate = _data.Vehicles.Where(c => c.CategoryId == prevCat.CategoryId).ToList();
                                 _vehicle.ReassignCategory(vehiclesToUpdate, category.CategoryId);
                                 DeleteCategory(prevCat.CategoryId);
-                                if(prevCat.MinWeight == 0)
+                                if (prevCat.MinWeight == 0)
                                     _data.Remove(prevCat);
                             }
 
                             else
                             {
-                                var vehiclesToUpdate = _data.Vehicles.Where(c => c.CategoryId == prevCat.CategoryId && c.Weight>=category.MinWeight).ToList();
+                                var vehiclesToUpdate = _data.Vehicles.Where(c => c.CategoryId == prevCat.CategoryId && c.Weight >= category.MinWeight).ToList();
                                 _vehicle.ReassignCategory(vehiclesToUpdate, category.CategoryId);
                                 prevCat.MaxWeight = category.MinWeight - 1;
                                 _data.Categories.Update(prevCat);
@@ -154,7 +159,7 @@ namespace Cwork.Service.Implimentation
                             }
                             else
                             {
-                                var vehiclesToUpdate = _data.Vehicles.Where(c => c.CategoryId == nextCat.CategoryId && c.Weight<=category.MaxWeight).ToList();
+                                var vehiclesToUpdate = _data.Vehicles.Where(c => c.CategoryId == nextCat.CategoryId && c.Weight <= category.MaxWeight).ToList();
                                 _vehicle.ReassignCategory(vehiclesToUpdate, category.CategoryId);
                                 nextCat.MinWeight = category.MaxWeight + 1;
                                 _data.Categories.Update(nextCat);
@@ -169,6 +174,8 @@ namespace Cwork.Service.Implimentation
             _data.Categories.Update(categoryToUpdate);
             _data.SaveChanges();
             return ("Updated successfully");
+             }
+             return("Access to Admin Only!");
         }
     }
 }

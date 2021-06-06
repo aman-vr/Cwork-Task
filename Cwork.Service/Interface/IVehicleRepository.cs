@@ -8,6 +8,7 @@ namespace Cwork.Service.Interface
     {
         int CreateVehicle(VehicleDTO model);
         List<VehicleListDTO> GetAllVehicles();
+        List<VehicleListDTO> GetVehiclesByUser();
         int ReassignCategory(List<VehicleModel> vehiclesToUpdate, int newCategoryId);
     }
 }

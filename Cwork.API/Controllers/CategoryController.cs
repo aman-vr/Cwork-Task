@@ -1,13 +1,14 @@
 ﻿using Cwork.Domain.Models.Input;
 using Cwork.Domain.Models.Output;
-using Cwork.Service.Implimentation;
 using Cwork.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cwork.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository _repo;
@@ -19,7 +20,7 @@ namespace Cwork.API.Controllers
 
         [HttpPost]
         [Route("createCategory")]
-
+        [Authorize]//Admin Only
         public IActionResult CreateNewCategory(CategoryModel model)
         {
             return Ok(_repo.CreateCategory(model));
@@ -38,12 +39,14 @@ namespace Cwork.API.Controllers
             return Ok(_repo.GetRecentCategory());
         }
         [HttpPost]
+        [Authorize]//Admin Only
         [Route("deleteCategory")]
         public IActionResult DeleteCategory(int id)
         {
             return Ok(_repo.DeleteCategory(id));
         }
         [HttpPost]
+        [Authorize]//Admin Only
         [Route("updateCategory")]
         public IActionResult UpdateCategory(int id, CategoryUpdateDTO category)
         {

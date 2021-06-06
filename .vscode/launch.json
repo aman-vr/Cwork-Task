@@ -2,7 +2,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
             // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
@@ -11,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Cwork.API/bin/Debug/netcoreapp3.1/Cwork.API.dll",
+            "program": "${workspaceFolder}/Cwork.API/bin/Debug/net5.0/Cwork.API.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Cwork.API",
             "stopAtEntry": false,
@@ -30,8 +29,7 @@
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
+            "request": "attach"
         }
     ]
 }

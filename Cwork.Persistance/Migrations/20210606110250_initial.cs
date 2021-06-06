@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Cwork.Persistance.Migrations
 {
-    public partial class updatedDbSchemaWithRelations : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,12 +11,12 @@ namespace Cwork.Persistance.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryId = table.Column<int>(nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<string>(nullable: false),
-                    MinWeight = table.Column<decimal>(nullable: false),
-                    MaxWeight = table.Column<decimal>(nullable: false),
-                    Icon = table.Column<string>(nullable: true)
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MinWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MaxWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,9 +27,9 @@ namespace Cwork.Persistance.Migrations
                 name: "Manufacturers",
                 columns: table => new
                 {
-                    ManufacturingId = table.Column<int>(nullable: false)
+                    ManufacturingId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ManufacturerName = table.Column<string>(nullable: false)
+                    ManufacturerName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,16 +37,34 @@ namespace Cwork.Persistance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserLoginDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLoginDetails", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Vehicles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OwnerName = table.Column<string>(nullable: false),
-                    Year = table.Column<string>(nullable: false),
-                    Weight = table.Column<decimal>(nullable: false),
-                    ManufacturingId = table.Column<int>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false)
+                    OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EmailId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Year = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ManufacturingId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -77,6 +96,9 @@ namespace Cwork.Persistance.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "UserLoginDetails");
+
             migrationBuilder.DropTable(
                 name: "Vehicles");
 

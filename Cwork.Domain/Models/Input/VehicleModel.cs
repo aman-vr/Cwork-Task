@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Cwork.Domain.Models.Input
 {
@@ -9,6 +10,7 @@ namespace Cwork.Domain.Models.Input
         [Required]
         public string OwnerName { get; set; }
         [Required]
+        public DateTime CreatedOn { get; set; } = DateTime.Now.Date;
         public string EmailId { get; set; }
         [Required]
 
